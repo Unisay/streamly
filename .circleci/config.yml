@@ -390,7 +390,8 @@ jobs:
             command: |
               bash -c "$PACKCHECK $BUILD" || exit 1
               count=$(find . -name "*.hs" -exec grep -H '\ $' {} \; | tee /dev/tty | wc -l)
-              exit $count
+              count2=$(awk '{ if (length($0) > 80) {print "Line length exceeds 80 : " length($0); print $0; print  FILENAME;  } }' *.hs | tee /dev/tty | wc -l)
+              exit $((count+count2))
         - *save
 
 workflows:
