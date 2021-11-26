@@ -64,7 +64,7 @@ module Streamly.Internal.FileSystem.Event.Linux
 
     -- ** Default configuration
       Config (..)
-    , Toggle (..)
+    , Switch (..)
     , defaultConfig
 
     -- ** Watch Behavior
@@ -214,19 +214,17 @@ data Config = Config
 -- Boolean settings
 -------------------------------------------------------------------------------
 
--- XXX Change Toggle to "OnOff" or "Switch". The name Toggle may be confusing.
---
 -- | Whether a setting is 'On' or 'Off'.
 --
 -- /Pre-release/
 --
-data Toggle = On | Off deriving (Show, Eq)
+data Switch = On | Off deriving (Show, Eq)
 
-toggle :: Toggle -> Toggle
+toggle :: Switch -> Switch
 toggle On = Off
 toggle Off = On
 
-setFlag :: Word32 -> Toggle -> Config -> Config
+setFlag :: Word32 -> Switch -> Config -> Config
 setFlag mask status cfg@Config{..} =
     let flags =
             case status of
@@ -245,7 +243,7 @@ setFlag mask status cfg@Config{..} =
 --
 -- /Pre-release/
 --
-setRecursiveMode :: Toggle -> Config -> Config
+setRecursiveMode :: Switch -> Config -> Config
 setRecursiveMode rec cfg@Config{} = cfg {watchRec = rec == On}
 
 foreign import capi
@@ -261,7 +259,7 @@ foreign import capi
 --
 -- /Pre-release/
 --
-setFollowSymLinks :: Toggle -> Config -> Config
+setFollowSymLinks :: Switch -> Config -> Config
 setFollowSymLinks s = setFlag iN_DONT_FOLLOW (toggle s)
 
 foreign import capi
@@ -274,7 +272,7 @@ foreign import capi
 --
 -- /Pre-release/
 --
-setUnwatchMoved :: Toggle -> Config -> Config
+setUnwatchMoved :: Switch -> Config -> Config
 setUnwatchMoved = setFlag iN_EXCL_UNLINK
 
 #if HAVE_DECL_IN_MASK_CREATE
@@ -322,7 +320,7 @@ foreign import capi
 --
 -- /Pre-release/
 --
-setOneShot :: Toggle -> Config -> Config
+setOneShot :: Switch -> Config -> Config
 setOneShot = setFlag iN_ONESHOT
 
 foreign import capi
@@ -335,7 +333,7 @@ foreign import capi
 --
 -- /Pre-release/
 --
-setOnlyDir :: Toggle -> Config -> Config
+setOnlyDir :: Switch -> Config -> Config
 setOnlyDir = setFlag iN_ONLYDIR
 
 -------------------------------------------------------------------------------
@@ -351,7 +349,7 @@ foreign import capi
 --
 -- /Pre-release/
 --
-setRootDeleted :: Toggle -> Config -> Config
+setRootDeleted :: Switch -> Config -> Config
 setRootDeleted = setFlag iN_DELETE_SELF
 
 foreign import capi
@@ -363,7 +361,7 @@ foreign import capi
 --
 -- /Pre-release/
 --
-setRootMoved :: Toggle -> Config -> Config
+setRootMoved :: Switch -> Config -> Config
 setRootMoved = setFlag iN_MOVE_SELF
 
 -- | Report when the watched root path itself gets deleted or renamed.
@@ -372,7 +370,7 @@ setRootMoved = setFlag iN_MOVE_SELF
 --
 -- /Pre-release/
 --
-setRootPathEvents :: Toggle -> Config -> Config
+setRootPathEvents :: Switch -> Config -> Config
 setRootPathEvents = setFlag (iN_DELETE_SELF .|. iN_MOVE_SELF)
 
 foreign import capi
@@ -385,7 +383,7 @@ foreign import capi
 --
 -- /Pre-release/
 --
-setAttrsModified :: Toggle -> Config -> Config
+setAttrsModified :: Switch -> Config -> Config
 setAttrsModified = setFlag iN_ATTRIB
 
 foreign import capi
@@ -397,7 +395,7 @@ foreign import capi
 --
 -- /Pre-release/
 --
-setAccessed :: Toggle -> Config -> Config
+setAccessed :: Switch -> Config -> Config
 setAccessed = setFlag iN_ACCESS
 
 foreign import capi
@@ -409,7 +407,7 @@ foreign import capi
 --
 -- /Pre-release/
 --
-setOpened :: Toggle -> Config -> Config
+setOpened :: Switch -> Config -> Config
 setOpened = setFlag iN_OPEN
 
 foreign import capi
@@ -421,7 +419,7 @@ foreign import capi
 --
 -- /Pre-release/
 --
-setWriteClosed :: Toggle -> Config -> Config
+setWriteClosed :: Switch -> Config -> Config
 setWriteClosed = setFlag iN_CLOSE_WRITE
 
 foreign import capi
@@ -433,7 +431,7 @@ foreign import capi
 --
 -- /Pre-release/
 --
-setNonWriteClosed :: Toggle -> Config -> Config
+setNonWriteClosed :: Switch -> Config -> Config
 setNonWriteClosed = setFlag iN_CLOSE_NOWRITE
 
 foreign import capi
@@ -445,7 +443,7 @@ foreign import capi
 --
 -- /Pre-release/
 --
-setCreated :: Toggle -> Config -> Config
+setCreated :: Switch -> Config -> Config
 setCreated = setFlag iN_CREATE
 
 foreign import capi
@@ -457,7 +455,7 @@ foreign import capi
 --
 -- /Pre-release/
 --
-setDeleted :: Toggle -> Config -> Config
+setDeleted :: Switch -> Config -> Config
 setDeleted = setFlag iN_DELETE
 
 foreign import capi
@@ -469,7 +467,7 @@ foreign import capi
 --
 -- /Pre-release/
 --
-setMovedFrom :: Toggle -> Config -> Config
+setMovedFrom :: Switch -> Config -> Config
 setMovedFrom = setFlag iN_MOVED_FROM
 
 foreign import capi
@@ -481,7 +479,7 @@ foreign import capi
 --
 -- /Pre-release/
 --
-setMovedTo :: Toggle -> Config -> Config
+setMovedTo :: Switch -> Config -> Config
 setMovedTo = setFlag iN_MOVED_TO
 
 foreign import capi
@@ -493,7 +491,7 @@ foreign import capi
 --
 -- /Pre-release/
 --
-setModified :: Toggle -> Config -> Config
+setModified :: Switch -> Config -> Config
 setModified = setFlag iN_MODIFY
 
 -- | Set all tunable events 'On' or 'Off'. Equivalent to setting:
@@ -513,7 +511,7 @@ setModified = setFlag iN_MODIFY
 --
 -- /Pre-release/
 --
-setAllEvents :: Toggle -> Config -> Config
+setAllEvents :: Switch -> Config -> Config
 setAllEvents s =
       setRootDeleted s
     . setRootMoved s
