@@ -291,7 +291,7 @@ foreign import ccall unsafe "string.h memcmp" c_memcmp
 {-# INLINE bytesToElemCount #-}
 bytesToElemCount :: Storable a => a -> Int -> Int
 bytesToElemCount x n =
-    let elemSize = sizeOf x
+    let elemSize = max 1 $ sizeOf x
     in n `div` elemSize
 
 -- XXX we are converting Int to CSize
@@ -1184,7 +1184,7 @@ byteLength Array{..} =
 {-# INLINE length #-}
 length :: forall a. Storable a => Array a -> Int
 length arr =
-    let elemSize = sizeOf (undefined :: a)
+    let elemSize = max 1 $ sizeOf (undefined :: a)
         blen = byteLength arr
      in assert (blen `mod` elemSize == 0) (blen `div` elemSize)
 
