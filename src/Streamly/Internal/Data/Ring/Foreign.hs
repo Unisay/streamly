@@ -1,5 +1,5 @@
 -- |
--- Module      : Streamly.Internal.Ring.Foreign
+-- Module      : Streamly.Internal.Data.Ring.Foreign
 -- Copyright   : (c) 2019 Composewell Technologies
 -- License     : BSD3
 -- Maintainer  : streamly@composewell.com
@@ -7,7 +7,7 @@
 -- Portability : GHC
 --
 
-module Streamly.Internal.Ring.Foreign
+module Streamly.Internal.Data.Ring.Foreign
     ( Ring(..)
 
     -- * Construction
