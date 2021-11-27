@@ -12,7 +12,7 @@
 --
 -- =Overview
 --
--- Use 'watchTrees'or 'watchPaths' with a list of file system dir paths you 
+-- Use 'watchTrees'or 'watchPaths' with a list of file system dir paths you
 -- want to watch as argument. It returns a stream of 'Event' representing the
 -- file system events occurring under the watched paths.
 --
